@@ -1,8 +1,8 @@
-# Stable Diffusion Endpoint Returning an Image with FastAPI
+# Stable Diffusion Image Endpoint with FastAPI
 
 This project uses FastAPI to create an endpoint that returns an image generated from a text prompt using [Stability-AI's Stable Diffusion model](https://github.com/Stability-AI/stablediffusion/blob/main/scripts/txt2img.py).
 
-This code is tested using python 3.10 and diffusers 0.21.4
+This code is tested using Python 3.10 and diffusers 0.21.4
 
 ## Instructions To Run
 
