@@ -5,10 +5,12 @@ from PIL import Image
 model_id = "stabilityai/stable-diffusion-2-1"
 
 if torch.cuda.is_available():
+    print('Found a GPU')
     device = 'cuda'
     pipe = StableDiffusionPipeline.from_pretrained(
         model_id, torch_dtype=torch.float16)
 else:
+    print('No GPU Found. Using CPU')
     device = 'cpu'
     pipe = StableDiffusionPipeline.from_pretrained(model_id)
 
