@@ -6,6 +6,11 @@ from io import BytesIO
 app = FastAPI()
 
 
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+
 @app.get("/generate")
 async def get_image(prompt: str):
     image = await generate_image(prompt)
