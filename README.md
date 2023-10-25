@@ -1,6 +1,6 @@
 # Stable Diffusion Endpoint with FastAPI and AWS EC2
 
-This project uses FastAPI to create an endpoint that returns an image generated from a text prompt using [Stability-AI's Stable Diffusion model](https://github.com/Stability-AI/stablediffusion). You can run it on your local machine with an Nvidia GPU and CUDA or just on your CPU (this will take a lot longer). Alternatively, you can can run it on an AWS EC2 GPU Instance using the instructions below.
+This project uses FastAPI to create an endpoint that returns an image generated from a text prompt using [Stability-AI's Stable Diffusion model](https://github.com/Stability-AI/stablediffusion). If you run it on your local machine it will use your Nvidia GPU and CUDA if you have one or your CPU otherwise (this will take a lot longer). Alternatively, you can can run it on an AWS EC2 GPU Instance using the instructions below.
 
 This code is tested using Python 3.10 and diffusers 0.21.4
 
