@@ -218,7 +218,13 @@ This code is tested using Python 3.10 and diffusers 0.21.4
 
     Save the file with <kbd>Ctrl</kbd> + <kbd>X</kbd> and then <kbd>Enter</kbd> to confirm the name.
 
-12. We can now start the server again. Go back to the repository directory
+    Restart the server
+
+    ```bash
+    sudo service nginx restart
+    ```
+
+13. We can now start the server again. Go back to the repository directory
 
     ```bash
     cd ~/stablediffusion-fastpi
@@ -230,7 +236,7 @@ This code is tested using Python 3.10 and diffusers 0.21.4
     uvicorn main:app
     ```
 
-13. To confirm that everything has worked you can go to
+14. To confirm that everything has worked you can go to
     publicip/8000 (where publicip is the Public IP of your AWS instance) on your browser and make sure that you see
     {“message”: “Hello World”}
 
