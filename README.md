@@ -90,7 +90,7 @@ This code is tested using Python 3.10 and diffusers 0.21.4
    conda activate stable-diffusion
    ```
 
-7. (Optional) Set our TMPDIR to a directory in our AWS instance volume. To ensure that our installs run smoothly and we do not run out of storage or RAM we can set our TMPDIR to an available AWS instance volume. This storage will be lost when we stop and restart the instance so it is suitable for our TMPDIR.
+7. **(Optional)** Set our TMPDIR to a directory in our AWS instance volume. To ensure that our installs run smoothly and we do not run out of storage or RAM we can set our TMPDIR to an available AWS instance volume. This storage will be lost when we stop and restart the instance so it is suitable for our TMPDIR.
 
    First we must mount the instance volume. Check the available storage blocks.
 
@@ -137,7 +137,7 @@ This code is tested using Python 3.10 and diffusers 0.21.4
    uvicorn main:app
    ```
 
-   You should see something like this
+   You should see something like this <br/>
    ![image](./images/uvicorn.png)
 
    Stop the server with <kbd>Ctrl</kbd> + <kbd>C</kbd>
@@ -234,5 +234,5 @@ This code is tested using Python 3.10 and diffusers 0.21.4
     publicip/8000 (where publicip is the Public IP of your AWS instance) on your browser and make sure that you see
     {“message”: “Hello World”}
 
-    Congrats! Everything is set up.
+    **Congrats!** Everything is set up.
     You can open **request-example.py** on your local machine, change the IP in the url and the prompt and run the script to generate images using stable diffusion!
