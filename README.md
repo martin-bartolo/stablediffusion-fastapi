@@ -214,7 +214,7 @@ This code is tested using Python 3.10 and diffusers 0.21.4
     }
     ```
 
-    This will serve whatever we have running on our AWS instances' localhost <http://127.0.0.1:8000> to its public IP.
+    This will serve whatever we have running on our AWS instances' localhost to its public IP.
 
     Save the file with <kbd>Ctrl</kbd> + <kbd>X</kbd> and then <kbd>Enter</kbd> to confirm the name.
 
