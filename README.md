@@ -227,7 +227,7 @@ This code is tested using Python 3.10 and diffusers 0.21.4
 13. We can now start the server again. Go back to the repository directory
 
     ```bash
-    cd ~/stablediffusion-fastpi
+    cd ~/stablediffusion-fastapi
     ```
 
     Start the server
