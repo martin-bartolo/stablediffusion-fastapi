@@ -249,7 +249,9 @@ To avoid having to ssh into the instance and start the uvicorn server up manuall
 
 1. Allocate an Elastic IP to your instance
 2. Change the nginx server IP
-
+   
+    Start your instance and ssh in
+   
     Open the nginx server file
    
     ```bash
