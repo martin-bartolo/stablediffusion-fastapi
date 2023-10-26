@@ -307,6 +307,6 @@ To avoid having to ssh into the instance and start the uvicorn server up manuall
    sudo systemctl enable run_server.service
    ```
 
-   The service will run everytime you start the instance. Remember to give it a minute or 2 to set up the server and load the model pipeline before it will work.
+4. The service will now run everytime you start the instance. Remember to give it a minute or 2 to set up the server and load the model pipeline before it will work.
 
    
