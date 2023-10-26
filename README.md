@@ -199,7 +199,7 @@ This code is tested using Python 3.10 and diffusers 0.21.4
 
     ```bash
     cd /etc/nginx/sites-enabled/
-    sudo nano stable-diffusion
+    sudo nano stablediffusion
     ```
 
     Inside the file copy the following (server_name is replaced by the Public IP of your AWS instance)
