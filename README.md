@@ -242,3 +242,71 @@ This code is tested using Python 3.10 and diffusers 0.21.4
 
     **Congrats!** Everything is set up.
     You can open **request-example.py** on your local machine, change the IP in the url and the prompt and run the script to generate images using stable diffusion!
+
+## BONUS: Expose the Endpoint on Instance Start
+
+To avoid having to ssh into the instance and start the uvicorn server up manually, let's create a serving that will start it whenever we start up the instance.
+
+1. Allocate an Elastic IP to your instance
+2. Change the nginx server IP
+
+    Open the nginx server file
+   
+    ```bash
+    cd /etc/nginx/sites-enabled/
+    sudo nano stablediffusion
+    ```
+   
+    Inside the file change the server_name IP to your new elastic IP (server_name is replaced by the Public IP of your AWS instance)
+   
+    Save the file with <kbd>Ctrl</kbd> + <kbd>X</kbd> and then <kbd>Enter</kbd> to confirm the name.
+   
+    Restart the server
+   
+    ```bash
+    sudo service nginx restart
+    ```
+
+4. Create a new start-up service to run the uvicorn server
+
+   Create the service file
+   
+   ```bash
+   cd /etc/systemd/system/
+   sudo nano run_server.service
+   ```
+
+   Paste the following inside the file (change any paths which are different for you)
+   
+   ```
+   [Unit]
+   Description=Run Uvicorn Server
+   After=network.target
+   
+   [Service]
+   User=ubuntu
+   WorkingDirectory=/home/ubuntu/stablediffusion-fastapi
+   ExecStart=/home/ubuntu/miniconda3/envs/stable-diffusion/bin/uvicorn main:app
+   Restart=always
+   
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+   Save the file with <kbd>Ctrl</kbd> + <kbd>X</kbd> and then <kbd>Enter</kbd> to confirm the name.
+
+   Reload the systemd manager configuration
+
+   ```bash
+   sudo systemctl daemon-reload
+   ```
+
+   Enable the service on start-up
+
+   ```bash
+   sudo systemctl enable run_server.service
+   ```
+
+   The service will run everytime you start the instance. Remember to give it a minute or 2 to set up the server and load the model pipeline before it will work.
+
+   
