@@ -2,7 +2,7 @@ import requests
 from PIL import Image
 from io import BytesIO
 
-url = 'http://127.0.0.1:8000/generate'
+url = 'http://publicip/generate'
 params = {'prompt': 'little boy juggling volcanoes'}
 
 # Get the image url
