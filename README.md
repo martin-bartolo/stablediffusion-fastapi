@@ -1,6 +1,6 @@
 # Stable Diffusion Endpoint with FastAPI and AWS EC2
 
-This project uses FastAPI to create an endpoint that returns an image generated from a text prompt using [Stability-AI's Stable Diffusion model](https://github.com/Stability-AI/stablediffusion). You can run it on your local machine with an Nvidia GPU and CUDA or just on your CPU (this will take a lot longer). Alternatively, you can can run it on an AWS EC2 GPU Instance using the instructions below.
+This project uses FastAPI to create an endpoint that returns an image generated from a text prompt using [Stability-AI's Stable Diffusion model](https://github.com/Stability-AI/stablediffusion). If you run it on your local machine it will use your Nvidia GPU and CUDA if you have one or your CPU otherwise (this will take a lot longer). Alternatively, you can can run it on an AWS EC2 GPU Instance using the instructions below. If you would like to upload images to an S3 bucket and return the image url instead of returning the raw image bytes then check out the [s3 branch](https://github.com/martin-bartolo/stablediffusion-fastapi/tree/s3).
 
 This code is tested using Python 3.10 and diffusers 0.21.4
 
@@ -90,7 +90,7 @@ This code is tested using Python 3.10 and diffusers 0.21.4
    conda activate stable-diffusion
    ```
 
-7. (Optional) Set our TMPDIR to a directory in our AWS instance volume. To ensure that our installs run smoothly and we do not run out of storage or RAM we can set our TMPDIR to an available AWS instance volume. This storage will be lost when we stop and restart the instance so it is suitable for our TMPDIR.
+7. **(Optional)** Set our TMPDIR to a directory in our AWS instance volume. To ensure that our installs run smoothly and we do not run out of storage or RAM we can set our TMPDIR to an available AWS instance volume. This storage will be lost when we stop and restart the instance so it is suitable for our TMPDIR.
 
    First we must mount the instance volume. Check the available storage blocks.
 
@@ -137,7 +137,7 @@ This code is tested using Python 3.10 and diffusers 0.21.4
    uvicorn main:app
    ```
 
-   You should see something like this
+   You should see something like this <br/>
    ![image](./images/uvicorn.png)
 
    Stop the server with <kbd>Ctrl</kbd> + <kbd>C</kbd>
@@ -199,7 +199,7 @@ This code is tested using Python 3.10 and diffusers 0.21.4
 
     ```bash
     cd /etc/nginx/sites-enabled/
-    sudo nano stable-diffusion
+    sudo nano stablediffusion
     ```
 
     Inside the file copy the following (server_name is replaced by the Public IP of your AWS instance)
@@ -214,14 +214,20 @@ This code is tested using Python 3.10 and diffusers 0.21.4
     }
     ```
 
-    This will serve whatever we have running on our AWS instances' localhost <http://127.0.0.1:8000> to its public IP.
+    This will serve whatever we have running on our AWS instances' localhost to its public IP.
 
     Save the file with <kbd>Ctrl</kbd> + <kbd>X</kbd> and then <kbd>Enter</kbd> to confirm the name.
 
-12. We can now start the server again. Go back to the repository directory
+    Restart the server
 
     ```bash
-    cd ~/stablediffusion-fastpi
+    sudo service nginx restart
+    ```
+
+13. We can now start the server again. Go back to the repository directory
+
+    ```bash
+    cd ~/stablediffusion-fastapi
     ```
 
     Start the server
@@ -230,9 +236,79 @@ This code is tested using Python 3.10 and diffusers 0.21.4
     uvicorn main:app
     ```
 
-13. To confirm that everything has worked you can go to
+14. To confirm that everything has worked you can go to
     publicip/8000 (where publicip is the Public IP of your AWS instance) on your browser and make sure that you see
     {“message”: “Hello World”}
 
-    Congrats! Everything is set up.
+    **Congrats!** Everything is set up.
     You can open **request-example.py** on your local machine, change the IP in the url and the prompt and run the script to generate images using stable diffusion!
+
+## BONUS: Expose the Endpoint on Instance Start
+
+To avoid having to ssh into the instance and start the uvicorn server up manually, let's create a serving that will start it whenever we start up the instance.
+
+1. Allocate an Elastic IP to your instance
+2. Change the nginx server IP
+   
+    Start your instance and ssh in
+   
+    Open the nginx server file
+   
+    ```bash
+    cd /etc/nginx/sites-enabled/
+    sudo nano stablediffusion
+    ```
+   
+    Inside the file change the server_name IP to your new elastic IP (server_name is replaced by the Public IP of your AWS instance)
+   
+    Save the file with <kbd>Ctrl</kbd> + <kbd>X</kbd> and then <kbd>Enter</kbd> to confirm the name.
+   
+    Restart the server
+   
+    ```bash
+    sudo service nginx restart
+    ```
+
+4. Create a new start-up service to run the uvicorn server
+
+   Create the service file
+   
+   ```bash
+   cd /etc/systemd/system/
+   sudo nano run_server.service
+   ```
+
+   Paste the following inside the file (change any paths which are different for you)
+   
+   ```
+   [Unit]
+   Description=Run Uvicorn Server
+   After=network.target
+   
+   [Service]
+   User=ubuntu
+   WorkingDirectory=/home/ubuntu/stablediffusion-fastapi
+   ExecStart=/home/ubuntu/miniconda3/envs/stable-diffusion/bin/uvicorn main:app
+   Restart=always
+   
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+   Save the file with <kbd>Ctrl</kbd> + <kbd>X</kbd> and then <kbd>Enter</kbd> to confirm the name.
+
+   Reload the systemd manager configuration
+
+   ```bash
+   sudo systemctl daemon-reload
+   ```
+
+   Enable the service on start-up
+
+   ```bash
+   sudo systemctl enable run_server.service
+   ```
+
+4. The service will now run everytime you start the instance. Remember to give it a minute or 2 to set up the server and load the model pipeline before it will work.
+
+   
