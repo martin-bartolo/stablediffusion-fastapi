@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from fastapi.responses import Response
-from utils import generate_image
+from fastapi.responses import JSONResponse
+from utils import generate_image, s3_upload
 from io import BytesIO
 
 app = FastAPI()
@@ -18,5 +18,8 @@ async def get_image(prompt: str):
     # Convert PIL image to bytes
     image_bytes = BytesIO()
     image.save(image_bytes, format='PNG')
+    image_bytes.seek(0)
 
-    return Response(content=image_bytes.getvalue(), media_type="image/png")
+    # Upload image to s3 and get url
+    s3_url = await s3_upload(image_bytes)
+    return JSONResponse(content={"image_url": s3_url})
