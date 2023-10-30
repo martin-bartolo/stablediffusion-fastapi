@@ -21,7 +21,7 @@ These instructions assume that you have already set-up everything using the inst
    			"Effect": "Allow",
    			"Principal": "*",
    			"Action": "s3:GetObject",
-   			"Resource": "arn:aws:s3:::stable-diffusion-martin/*"
+   			"Resource": "arn:aws:s3:::bucket-name/*"
    		}
    	]
    }
